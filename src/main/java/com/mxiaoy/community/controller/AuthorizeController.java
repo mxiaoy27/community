@@ -7,12 +7,12 @@ import com.mxiaoy.community.model.User;
 import com.mxiaoy.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 /**
@@ -43,7 +43,7 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name="code") String code,
                            @RequestParam(name="state") String state,
-                           HttpServletRequest request) {
+                           HttpServletResponse response) {
 
         AccessTokenDto accessTokenDto = new AccessTokenDto();
         accessTokenDto.setClient_id(clientId);
@@ -55,14 +55,14 @@ public class AuthorizeController {
         GithubUser githubUser = githubProvider.getUser(accessToken);
         if (githubUser != null){
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
-            user.setName(githubUser.getName());
-            user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
+            String token = UUID.randomUUID().toString();
+            user.setUser_token(token);
+            user.setUser_name(githubUser.getName());
+            user.setAccount_Id(String.valueOf(githubUser.getId()));
+            user.setGmt_create(System.currentTimeMillis());
+            user.setGmt_modified(user.getGmt_create());
             userMapper.insert(user);
-            // 登陆成功 cookie和session
-            request.getSession().setAttribute("user",githubUser);
+            response.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
             // 登录失败
