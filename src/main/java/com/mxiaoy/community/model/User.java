@@ -7,6 +7,15 @@ public class User {
     private String user_token;
     private Long gmt_create;
     private Long gmt_modified;
+    private String user_bio;
+
+    public String getUser_bio() {
+        return user_bio;
+    }
+
+    public void setUser_bio(String user_bio) {
+        this.user_bio = user_bio;
+    }
 
     public Integer getId() {
         return id;
@@ -65,6 +74,7 @@ public class User {
                 ", user_token='" + user_token + '\'' +
                 ", gmt_create=" + gmt_create +
                 ", gmt_modified=" + gmt_modified +
+                ", user_bio='" + user_bio + '\'' +
                 '}';
     }
 }

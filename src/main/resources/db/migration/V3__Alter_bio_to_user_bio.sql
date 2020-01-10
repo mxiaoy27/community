@@ -1,0 +1,1 @@
+alter  table users CHANGE bio user_bio varchar(256);
