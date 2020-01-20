@@ -1,0 +1,1 @@
+alter table question add column title varchar(50);
