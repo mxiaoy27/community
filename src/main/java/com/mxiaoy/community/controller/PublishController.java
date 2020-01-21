@@ -53,7 +53,8 @@ public class PublishController {
             return "publish";
         }
         if(tag == null || tag == ""){
-            model.addAttribute("error", "标签不能为空");
+            model.addAttribute("error", "标签不能为空" +
+                    "");
             return "publish";
         }
 
