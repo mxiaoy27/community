@@ -1,13 +1,19 @@
 package com.mxiaoy.community.controller;
 
+import com.mxiaoy.community.dto.QuestionDto;
+import com.mxiaoy.community.mapper.QuestionMapper;
 import com.mxiaoy.community.mapper.UserMapper;
+import com.mxiaoy.community.model.Question;
 import com.mxiaoy.community.model.User;
+import com.mxiaoy.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Author zhuyushuo
@@ -22,8 +28,12 @@ public class IndexController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private QuestionService questionService;
+
     @GetMapping("/")
-    public String index(HttpServletRequest request) {
+    public String index(HttpServletRequest request,
+                        Model model) {
 
         Cookie[] cookies = request.getCookies();
 
@@ -40,6 +50,8 @@ public class IndexController {
             }
         }
 
+        List<QuestionDto> questionList = questionService.list();
+        model.addAttribute("questions", questionList);
         return "index";
     }
 
