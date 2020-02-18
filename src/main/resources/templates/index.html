@@ -61,7 +61,7 @@
                     <h4 class="media-heading" th:text="${questions.title}">快速学习springboot</h4>
                     <span th:text="${questions.description}"></span>
                     <br>
-                    <span class="text-desc"><span th:text="${questions.comment_count}"></span>个回复 · <span th:text="${questions.view_count}"></span>次浏览 · <span th:text="${#dates.format(questions.gmt_create,'dd-MM-yyyy')}"></span></span>
+                    <span class="text-desc"><span th:text="${questions.comment_count}"></span>个回复 · <span th:text="${questions.view_count}"></span>次浏览 · <span th:text="${#dates.format(questions.gmt_create,'dd-MM-yyyy HH:mm')}"></span></span>
                 </div>
             </div>
         </div>
