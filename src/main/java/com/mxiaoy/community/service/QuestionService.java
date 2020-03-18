@@ -1,5 +1,6 @@
 package com.mxiaoy.community.service;
 
+import com.mxiaoy.community.dto.PaginationDto;
 import com.mxiaoy.community.dto.QuestionDto;
 import com.mxiaoy.community.mapper.QuestionMapper;
 import com.mxiaoy.community.mapper.UserMapper;
@@ -21,16 +22,25 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<QuestionDto> list() {
-        List<Question> questions = questionMapper.list();
+    public PaginationDto list(Integer page, Integer size) {
+
+        Integer offset = size * (page - 1);
+        List<Question> questions = questionMapper.list(offset, size);
         List<QuestionDto> questionDtoList = new ArrayList<>();
-        for (Question question : questions){
+
+        PaginationDto paginationDto = new PaginationDto();
+
+        for (Question question : questions) {
             User user = userMapper.findById(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
             BeanUtils.copyProperties(question, questionDto);
             questionDto.setUser(user);
             questionDtoList.add(questionDto);
         }
-        return questionDtoList;
+
+        paginationDto.setQuestions(questionDtoList);
+        Integer totalCount = questionMapper.questionCount();
+        paginationDto.setPagination(totalCount, page, size);
+        return paginationDto;
     }
 }
