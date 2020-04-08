@@ -5,6 +5,7 @@ import com.mxiaoy.community.dto.GithubUser;
 import com.mxiaoy.community.mapper.UserMapper;
 import com.mxiaoy.community.model.User;
 import com.mxiaoy.community.provider.GithubProvider;
+import com.mxiaoy.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,8 +29,10 @@ public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
 
+
+
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Value("${github.Client.id}")
     private String clientId;
@@ -59,10 +62,8 @@ public class AuthorizeController {
             user.setUser_token(token);
             user.setUser_name(githubUser.getName());
             user.setAccount_Id(String.valueOf(githubUser.getId()));
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(user.getGmt_create());
             user.setAvatar_url(githubUser.getAvatar_url());
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
